@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block sidebar %}
+{% load shop_tags %}
+<div class="list-group">
+    {% get_categories as categories %}
+    {% for item in categories %}
+    <a href="/shop/category/{{ item.slug }}" class="list-group-item list-group-item-action">{{ item.name }}</a>
+    {% endfor %}
+</div>
+{% endblock %}
+
+<div class="list-group">
+    {% get_categories as categories %}
+    {% for item in categories %}
+    <a href="/blog/category/{{ item.pk }}" class="list-group-item list-group-item-action">{{ item.title }}</a>
+    {% endfor %}
+</div>
+
+{% block content %}
+{% for item in articles %}
+<div class="card mb-3">
+    <div class="card-header">
+        {{ item.category }}
+    </div>
+    <div class="card-body">
+        <div class="media">
+            {% if item.photo %}
+            <img src="{{ item.photo.url }}" width="300" class="mr-3">
+            {% else %}
+            <img src="/media/logo.png" width="300" class="mr-3">
+            {% endif %}
+            <div class="media-body">
+                <h4 class="card-title">{{ item.title }}</h4>
+                <p class="card-text">{{ item.content|safe|linebreaks|truncatewords:50 }}</p>
+                <a href="{{ item.get_absolute_url }}" class="btn btn-outline-primary">Читать далее...</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer text-muted">
+        {{ item.created_at |date:'Y.m.d H:i'}}
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
